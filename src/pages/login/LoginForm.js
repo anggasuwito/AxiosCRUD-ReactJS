@@ -2,7 +2,7 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../App.css';
 import swal from 'sweetalert';
-import LandingPage from '../LandingPage';
+import Navigation from '../Navigation';
 class LoginForm extends React.Component {
     constructor(props) {
         super(props)
@@ -65,7 +65,7 @@ class LoginForm extends React.Component {
         }
         if (this.state.homePage) {
             return (
-                <LandingPage />
+                <Navigation />
             )
         }
         return (

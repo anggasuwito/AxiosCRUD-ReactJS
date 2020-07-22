@@ -5,17 +5,24 @@ const getAllMenus = async () => {
     return menus
 }
 
+const getMenuByID = async (id) => {
+    let menus = await axios.get("http://localhost:3000/menu/" + id)
+    return menus
+}
+
 const createMenu = async (form) => {
-    let newMenu = await axios.post("http://localhost:3000/menu",form)
+    let newMenu = await axios.post("http://localhost:3000/menu", form)
     return newMenu
 }
 const updateMenu = async (form) => {
-    let changeMenu = await axios.put("http://localhost:3000/menu/"  + form.menu_id, form)
+    console.log("FORM",form);
+    console.log("link = http://localhost:3000/menu/" + form.id_menu);
+    let changeMenu = await axios.put("http://localhost:3000/menu/" + form.id_menu, form)
     return changeMenu
 }
 
-const deleteMenu = async (index) => {
-    let removeMenu = await axios.delete("http://localhost:3000/menu/" + index)
+const deleteMenu = async (id) => {
+    let removeMenu = await axios.delete("http://localhost:3000/menu/" + id)
     return removeMenu
 }
 
@@ -24,4 +31,4 @@ const deleteMenu = async (index) => {
 //     return menus
 // })
 
-export { getAllMenus, createMenu, updateMenu, deleteMenu };
+export { getAllMenus, getMenuByID, createMenu, updateMenu, deleteMenu };

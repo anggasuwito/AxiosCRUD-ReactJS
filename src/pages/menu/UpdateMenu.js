@@ -1,87 +1,79 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal, Button } from 'react-bootstrap'
 import React, { Component } from 'react'
-import { getAllMenus,updateMenu } from "../../api/menu/MenuServices.js";
-import Menu from './Menu';
+
 export class UpdateMenu extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            jenisMenu: this.props.jenis,
-            namaMenu: this.props.nama,
-            hargaMenu: this.props.harga,
-            stokMenu: this.props.stok,
-            idMenu : this.props.indexFromMenu,
-            cancelUpdate: false,
-            isUpdated: false
+            jenisMenu: this.props.result.jenis_menu,
+            namaMenu: this.props.result.nama_menu,
+            hargaMenu: this.props.result.harga_menu,
+            stokMenu: this.props.result.stok_menu,
+            idMenu: this.props.result.id_menu
         }
-    }
-    handleChangeInput = (event) => {
-        let name = event.target.name
-        this.setState({ ...this.state, [name]: event.target.value })
-    }
-  
-    loadData = () => {
-        getAllMenus()
     }
 
-    handleUpdateMenu = () => {
-        updateMenu({
-            jenis_menu: this.state.jenisMenu,
-            nama_menu: this.state.namaMenu,
-            harga_menu: this.state.hargaMenu,
-            stok_menu: this.state.stokMenu,
-            menu_id:this.state.idMenu
-        })
+    handleChangeInput = (event) => {
+        let name = event.target.name
         this.setState({
-            jenisMenu: this.state.jenisMenu,
-            namaMenu: this.state.namaMenu,
-            hargaMenu: this.state.hargaMenu,
-            stokMenu: this.state.stokMenu,
-            menu_id:this.state.idMenu,
-            isUpdated: true
+            ...this.state,
+            [name]: event.target.value
         })
-        this.loadData()
+        console.log("state", this.state)
     }
-    handleCancel = () => {
-        this.setState({
-            cancelUpdate: true
-        })
+    changeMenu = () => {
+        this.props.updateMenuByID(this.state.jenisMenu, this.state.namaMenu, this.state.hargaMenu, this.state.stokMenu, this.state.idMenu)
+        this.props.onHide()
     }
+
     render() {
-        if (this.state.cancelUpdate || this.state.isUpdated) {
-            return (
-                <Menu />
-            )
-        }
+        const { show, onHide } = this.props
         return (
             <div>
-                <div className="container">
-                    <br />
-                    <div className="card ">
-                        <div className="card-header">
-                            <h3>Update Menu</h3>
-                        </div>
-                        <div className="card-body">
-                            <form>
+                <Modal
+                    show={show}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton onClick={() => onHide()}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Update Menu
+            </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div>
+                            <div className="container">
                                 <br />
-                                <input className="form-control" placeholder="Jenis Menu" type="text" name="jenisMenu" value={this.state.jenisMenu} onChange={this.handleChangeInput} />
-                                <br />
-                                <input className="form-control" placeholder="Nama Menu" type="text" name="namaMenu" value={this.state.namaMenu} onChange={this.handleChangeInput} />
-                                <br />
-                                <input className="form-control" placeholder="Harga Menu" type="text" name="hargaMenu" value={this.state.hargaMenu} onChange={this.handleChangeInput} />
-                                <br />
-                                <input className="form-control" placeholder="Stok Menu" type="text" name="stokMenu" value={this.state.stokMenu} onChange={this.handleChangeInput} />
-                                <br />
-                                <br /><br />
-                                <div className="App">
-                                    <button className="btn btn-outline-primary" type="button" onClick={this.handleUpdateMenu}>Save</button>
-                                    <button className="btn btn-outline-primary" type="button" onClick={this.handleCancel}>Cancel</button>
+                                <div className="card ">
+
+                                    <div className="card-body">
+                                        <form>
+                                            <br />
+                                            <label>Jenis</label>
+                                            <input className="form-control" name="jenisMenu" onChange={this.handleChangeInput} value={this.state.jenisMenu} placeholder="Masukkan Jenis" type="text" />
+                                            <br />
+                                            <label>Nama</label>
+                                            <input className="form-control" name="namaMenu" onChange={this.handleChangeInput} value={this.state.namaMenu} placeholder="Masukkan Nama" type="text" />
+                                            <br />
+                                            <label>Harga</label>
+                                            <input className="form-control" name="hargaMenu" onChange={this.handleChangeInput} value={this.state.hargaMenu} placeholder="Masukkan Harga" type="text" />
+                                            <br />
+                                            <label>Stok</label>
+                                            <input className="form-control" name="stokMenu" onChange={this.handleChangeInput} value={this.state.stokMenu} placeholder="Masukkan Stok" type="text" />
+                                        </form>
+                                        <br />
+                                    </div>
                                 </div>
-                            </form>
-                            <br />
+                            </div>
                         </div>
-                    </div>
-                    <br /><br /><br /><br /><br /><br />
-                </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={() => this.changeMenu()}> Save</Button>
+                        <Button variant="secondary" onClick={() => onHide()}>Cancel</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }

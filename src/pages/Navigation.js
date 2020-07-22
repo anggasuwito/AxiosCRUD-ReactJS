@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Navbar from './../components/Navbar';
+import Navbar from '../components/Navbar';
 import HomePage from './home/HomePage';
 import Menu from './menu/Menu';
 import Transaksi from './transaksi/Transaksi';

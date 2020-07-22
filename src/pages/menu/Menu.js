@@ -1,78 +1,132 @@
 import React, { Component } from 'react';
-import { getAllMenus } from "../../api/menu/MenuServices.js";
+import { getAllMenus, createMenu, updateMenu, deleteMenu } from "../../api/menu/MenuServices.js";
 import MenuList from "./MenuList.js";
 import CreateMenu from './CreateMenu.js';
 import UpdateMenu from './UpdateMenu'
-import DeleteMenu from './DeleteMenu.js';
-class Menu extends Component {
-    state = {
-        message: "",
-        result: [],
-        isLoading: true,
-        onCreate: false,
-        onUpdate: false
-    }
-    componentDidMount() {
-        getAllMenus().then((menus) => {
-            this.setState({ ...this.state, message: menus.data.messages, result: menus.data.result, isLoading: false })
-        }).catch((error) => {
-            console.log(error);
-        })
+import DetailMenu from './DetailsMenu.js';
+import swal from 'sweetalert'
 
+class Menu extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            message: "",
+            result: [],
+            selectedMenu: {},
+            showDetails: false,
+            showCreateMenu: false,
+            showUpdate: false,
+            isLoading: true,
+        }
     }
-    handleCreate = () => {
-        this.setState({
-            ...this.state,
-            onCreate: true,
-            onUpdate: false,
-            onDelete: false
+
+    componentDidMount() {
+        this.loadData()
+    }
+
+    loadData = () => {
+        getAllMenus().then((response) => {
+            if (response.status === 200) {
+                this.setState({ ...this.state, message: response.data.messages, result: response.data.result, isLoading: false })
+            }
         })
     }
-    updateByIndex = (index, jenis, nama, harga, stok) => {
+
+    showDetailsMenu = (result) => {
         this.setState({
             ...this.state,
-            indexMenu: index,
-            jenisMenu: jenis,
-            namaMenu: nama,
-            hargaMenu: harga,
-            stokMenu: stok,
-            onUpdate: true,
-            onCreate: false,
-            onDelete: false
+            showDetails: !this.state.showDetails,
+            selectedMenu: { ...result }
         })
     }
-    deleteByIndex = (index) => {
+
+    hideDetailsMenu = () => {
         this.setState({
             ...this.state,
-            indexMenu: index,
-            onUpdate: false,
-            onCreate: false,
-            onDelete: true
+            showDetails: !this.state.showDetails,
+            selectedMenu: {}
         })
+    }
+
+    handleCreateModal = () => {
+        this.setState({
+            ...this.state,
+            showCreateMenu: !this.state.showCreateMenu,
+        })
+    }
+
+    addNewMenu = (jenisMenu, namaMenu, hargaMenu, stokMenu) => {
+        createMenu({
+            jenis_menu: jenisMenu,
+            nama_menu: namaMenu,
+            harga_menu: hargaMenu,
+            stok_menu: stokMenu
+        }).then(() => {
+            this.setState({
+                ...this.state,
+                showCreateMenu: !this.state.showCreateMenu,
+            })
+            this.loadData()
+        })
+    }
+
+    showUpdateModal = (result) => {
+        this.setState({
+            ...this.state,
+            showUpdate: !this.state.showUpdate,
+            selectedMenu: { ...result }
+        })
+    }
+
+    hideUpdateModal = () => {
+        this.setState({
+            ...this.state,
+            showUpdate: !this.state.showUpdate,
+            selectedMenu: {}
+        })
+    }
+
+    updateMenuByID = (jenis, nama, harga, stok, id) => {
+         updateMenu({
+            jenis_menu: jenis,
+            nama_menu: nama,
+            harga_menu: harga,
+            stok_menu: stok,
+            id_menu: id
+        }).then(() => {
+            this.loadData()
+        })
+    }
+    deleteMenuByID = (id) => {
+        swal({
+            title: "Are you sure want to delete this data ?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    deleteMenu(id)
+                        .then(() => {
+                            this.loadData()
+                        })
+                }
+            });
     }
     render() {
-        if (this.state.onCreate) {
-            return (
-                <CreateMenu />
-            )
-        }
-        if (this.state.onUpdate) {
-            return (
-                <UpdateMenu indexFromMenu={this.state.indexMenu} jenis={this.state.jenisMenu} nama={this.state.namaMenu} harga={this.state.hargaMenu} stok={this.state.stokMenu} />
-            )
-        }
-        if(this.state.onDelete){
-            return(
-                <DeleteMenu indexFromMenu={this.state.indexMenu}/>
-            )
+        let updateModal
+        if (this.state.showUpdate) {
+            updateModal = <UpdateMenu show={this.state.showUpdate} onHide={this.hideUpdateModal} result={this.state.selectedMenu} updateMenuByID={this.updateMenuByID} />
         }
         return (
             <div>
                 <div className="container">
                     <br />
-                    <button className="btn btn-outline-primary" type="button" onClick={this.handleCreate}>Create Menu</button>
+                    <CreateMenu show={this.state.showCreateMenu} handleCreateModal={this.handleCreateModal} addNewMenu={this.addNewMenu} />
                     <div>
-                        <MenuList result={this.state.result} isLoading={this.state.isLoading} updateByIndex={this.updateByIndex} deleteByIndex={this.deleteByIndex} />
+                        <MenuList result={this.state.result} isLoading={this.state.isLoading} detailsMenu={this.showDetailsMenu} updateMenuByID={this.showUpdateModal} deleteMenuByID={this.deleteMenuByID} />
+                        <DetailMenu show={this.state.showDetails} onHide={this.hideDetailsMenu} result={this.state.selectedMenu} />
+                        {updateModal}
                     </div>
                 </div>
             </div>
