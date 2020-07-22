@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from "react-bootstrap/cjs";
 import LoadingScreen from '../../components/LoadingScreen.js';
+import accounting from 'accounting/accounting.js'
 
 const MenuList = (props) => {
     const { isLoading, result, detailsMenu, updateMenuByID, deleteMenuByID } = props
@@ -28,7 +29,7 @@ const MenuList = (props) => {
                             <td>{index + 1}</td>
                             <td>{menu.jenis_menu}</td>
                             <td>{menu.nama_menu}</td>
-                            <td>{menu.harga_menu}</td>
+                            <td>{accounting.formatMoney(menu.harga_menu, "Rp. ", 2, ".", ",")}</td>
                             <td>{menu.stok_menu}</td>
                             <td>
                                 <button onClick={() => detailsMenu(menu)}>DETAILS</button>
