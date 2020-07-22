@@ -5,6 +5,7 @@ import LoginForm from '../pages/login/LoginForm'
 import Menu from './../pages/menu/Menu'
 import Transaksi from './../pages/transaksi/Transaksi'
 import Navbar from '../components/Navbar'
+import NotFound from './../components/NotFound'
 
 const routes = [
     { id: 1, path: '/home', component: HomePage },
@@ -52,6 +53,9 @@ class Navigation extends Component {
                             return <LoginForm {...props} onLogin={this.onLogin} />
                         }} />
                     {routeList}
+                    <Route path="*">
+                        <NotFound/>
+                    </Route>
                 </Switch>
             </div>
 
