@@ -64,10 +64,10 @@ export class CreateMenu extends Component {
                                             <input className="form-control" name="namaMenu" onChange={this.handleChangeInput} value={this.state.namaMenu} placeholder="Masukkan Nama" type="text" />
                                             <br />
                                             <label>Harga</label>
-                                            <input className="form-control" name="hargaMenu" onChange={this.handleChangeInput} value={this.state.hargaMenu} placeholder="Masukkan Harga" type="text" />
+                                            <input className="form-control" name="hargaMenu" onChange={this.handleChangeInput} value={this.state.hargaMenu} placeholder="Masukkan Harga" type="number" />
                                             <br />
                                             <label>Stok</label>
-                                            <input className="form-control" name="stokMenu" onChange={this.handleChangeInput} value={this.state.stokMenu} placeholder="Masukkan Stok" type="text" />
+                                            <input className="form-control" name="stokMenu" onChange={this.handleChangeInput} value={this.state.stokMenu} placeholder="Masukkan Stok" type="number" />
                                         </form>
                                         <br />
                                     </div>

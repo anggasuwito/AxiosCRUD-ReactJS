@@ -2,6 +2,9 @@ import React from 'react';
 import { Table } from "react-bootstrap/cjs";
 import LoadingScreen from '../../components/LoadingScreen.js';
 import accounting from 'accounting/accounting.js'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Button } from 'react-bootstrap'
 
 const MenuList = (props) => {
     const { isLoading, result, detailsMenu, updateMenuByID, deleteMenuByID } = props
@@ -20,7 +23,7 @@ const MenuList = (props) => {
                         <th>Nama Menu</th>
                         <th>Harga</th>
                         <th>Stok</th>
-                        <th>Actions</th>
+                        <th colSpan="3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,9 +35,14 @@ const MenuList = (props) => {
                             <td>{accounting.formatMoney(menu.harga_menu, "Rp. ", 2, ".", ",")}</td>
                             <td>{menu.stok_menu}</td>
                             <td>
-                                <button onClick={() => detailsMenu(menu)}>DETAILS</button>
-                                <button onClick={() => updateMenuByID(menu)}>Update</button>
-                                <button onClick={() => deleteMenuByID(menu.id_menu)}>Delete</button></td>
+                                <Button> <FontAwesomeIcon onClick={() => detailsMenu(menu)} icon={faEye} /></Button>
+                            </td>
+                            <td>
+                                <Button> <FontAwesomeIcon onClick={() => updateMenuByID(menu)} icon={faEdit} /></Button>
+                            </td>
+                            <td>
+                                <Button> <FontAwesomeIcon onClick={() => deleteMenuByID(menu)} icon={faTrash} /></Button>
+                            </td>
                         </tr>
                     )}
                 </tbody>
