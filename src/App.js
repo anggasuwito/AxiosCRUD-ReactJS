@@ -2,15 +2,18 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/MainHeader'
-import LoginForm from './pages/login/LoginForm';
+import Navigation from './pages/Navigation'
+import { BrowserRouter } from 'react-router-dom'
 
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Header/>
+        <Header />
         <div className="container">
-          <LoginForm/>
+          <BrowserRouter>
+            <Navigation />
+          </BrowserRouter>
         </div>
       </div>
     );

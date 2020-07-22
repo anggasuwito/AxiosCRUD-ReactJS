@@ -1,45 +1,62 @@
-import React, { Component } from 'react'
-import Navbar from '../components/Navbar';
-import HomePage from './home/HomePage';
-import Menu from './menu/Menu';
-import Transaksi from './transaksi/Transaksi';
-import LoadingScreen from '../components/LoadingScreen';
-import LoginForm from './login/LoginForm';
+import React, { Component } from 'react';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import HomePage from '../pages/home/HomePage'
+import LoginForm from '../pages/login/LoginForm'
+import Menu from './../pages/menu/Menu'
+import Transaksi from './../pages/transaksi/Transaksi'
+import Navbar from '../components/Navbar'
 
-export class LandingPage extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            goToPage: "",
-        }
+const routes = [
+    { id: 1, path: '/home', component: HomePage },
+    { id: 2, path: '/menu', component: Menu },
+    { id: 3, path: '/transaksi', component: Transaksi }
+]
+class Navigation extends Component {
+    state = {
+        auth: false
     }
-
-    handlePage = (onPage) => {
+    onLogin = () => {
         this.setState({
-            goToPage: onPage
+            auth: true
+        })
+        this.props.history.push({
+            pathname: "/home"
+        })
+    }
+    onLogout = () => {
+        this.setState({
+            auth: false
+        })
+        this.props.history.push({
+            pathname: "/"
         })
     }
 
     render() {
-        let showPage
-        if (this.state.goToPage === "" || this.state.goToPage === "homePage") {
-            showPage = <HomePage />
-        } else if (this.state.goToPage === "menuPage") {
-            showPage = <Menu />
-        } else if (this.state.goToPage === "transaksiPage") {
-            showPage = <Transaksi />
-        } else if (this.state.goToPage === "loginPage") {
-            return (<LoginForm />)
-        } else {
-            showPage = <LoadingScreen />
-        }
+        const routeList = routes.map((route) => {
+            return <Route
+                key={route.id}
+                path={route.path} render={
+                    (props) => {
+                        return this.state.auth ?
+                            <route.component {...props} /> : <Redirect to='/' />
+                    }
+                } />
+        });
         return (
             <div>
-                <Navbar toPage={this.handlePage} />
-                {showPage}
+                <Navbar logout={this.onLogout} auth={this.state.auth} />
+                <Switch>
+                    <Route path="/" exact
+                        render={(props) => {
+                            return <LoginForm {...props} onLogin={this.onLogin} />
+                        }} />
+                    {routeList}
+                </Switch>
             </div>
-        )
+
+        );
     }
 }
 
-export default LandingPage
+export default withRouter(Navigation);

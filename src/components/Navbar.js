@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import swal from 'sweetalert'
 
-export class Navbar extends Component {
-
-    handleLogout = () => {
+class Navbar extends Component {
+    toLogin = () => {
         swal({
             title: "Are you sure to logout ?",
             icon: "warning",
@@ -12,23 +12,29 @@ export class Navbar extends Component {
         })
             .then((willLogout) => {
                 if (willLogout) {
-                    this.props.toPage("loginPage")
+                    this.props.logout()
                 }
             });
     }
     render() {
-        let { toPage } = this.props
+        let showPage
+        if (this.props.auth) {
+            showPage = (
+                <>
+                    <Link to={"/home"}><button className="btn navbar-btn" >Home</button></Link>
+                    <Link to={"/menu"}><button className="btn navbar-btn" >Menu</button></Link>
+                    <Link to={"/transaksi"}><button className="btn navbar-btn" >Transaksi</button></Link>
+                    <button className="btn navbar-btn" onClick={() => this.toLogin()}>Logout</button>
+                </>)
+        }
         return (
-            <nav className="navbar navbar-expand-sm bg-light navbar-light">
+            <nav className="navbar navbar-expand-lg">
                 <ul className="navbar-nav">
-                    <button className="btn navbar-btn" onClick={() => toPage("homePage")}>Home</button>
-                    <button className="btn navbar-btn" onClick={() => toPage("menuPage")}>Menu</button>
-                    <button className="btn navbar-btn" onClick={() => toPage("transaksiPage")}>Transaksi</button>
-                    <button className="btn navbar-btn" onClick={this.handleLogout}>Logout</button>
+                    {showPage}
                 </ul>
             </nav>
-        )
+        );
     }
 }
 
-export default Navbar
+export default Navbar;

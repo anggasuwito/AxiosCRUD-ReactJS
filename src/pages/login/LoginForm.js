@@ -47,6 +47,7 @@ class LoginForm extends React.Component {
                             messageError: "",
                             homePage: true
                         })
+                        this.props.onLogin()
                     }
                 });
         }
