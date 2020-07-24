@@ -35,13 +35,13 @@ const MenuList = (props) => {
                             <td>{accounting.formatMoney(menu.harga_menu, "Rp. ", 2, ".", ",")}</td>
                             <td>{menu.stok_menu}</td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => detailsMenu(menu)} icon={faEye} /></Button>
+                                <Button variant="secondary" onClick={() => detailsMenu(menu)}> <FontAwesomeIcon icon={faEye} /></Button>
                             </td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => updateMenuByID(menu)} icon={faEdit} /></Button>
+                                <Button variant="success" onClick={() => updateMenuByID(menu)}> <FontAwesomeIcon icon={faEdit} /></Button>
                             </td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => deleteMenuByID(menu.id_menu)} icon={faTrash} /></Button>
+                                <Button variant="danger" onClick={() => deleteMenuByID(menu.id_menu)}> <FontAwesomeIcon icon={faTrash} /></Button>
                             </td>
                         </tr>
                     )}
