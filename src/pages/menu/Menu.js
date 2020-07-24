@@ -5,13 +5,12 @@ import CreateMenu from './CreateMenu.js';
 import UpdateMenu from './UpdateMenu'
 import DetailMenu from './DetailsMenu.js';
 import swal from 'sweetalert'
+import { connect } from 'react-redux';
 
 class Menu extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            message: "",
-            result: [],
             selectedMenu: {},
             showDetails: false,
             showCreateMenu: false,
@@ -27,7 +26,8 @@ class Menu extends Component {
     loadData = () => {
         getAllMenus().then((response) => {
             if (response.status === 200) {
-                this.setState({ ...this.state, message: response.data.messages, result: response.data.result, isLoading: false })
+                this.setState({ ...this.state, isLoading: false })
+                this.props.onGetMenus(response.data.messages, response.data.result)
             }
         })
     }
@@ -87,7 +87,7 @@ class Menu extends Component {
     }
 
     updateMenuByID = (jenis, nama, harga, stok, id) => {
-         updateMenu({
+        updateMenu({
             jenis_menu: jenis,
             nama_menu: nama,
             harga_menu: harga,
@@ -124,7 +124,7 @@ class Menu extends Component {
                     <br />
                     <CreateMenu show={this.state.showCreateMenu} handleCreateModal={this.handleCreateModal} addNewMenu={this.addNewMenu} />
                     <div>
-                        <MenuList result={this.state.result} isLoading={this.state.isLoading} detailsMenu={this.showDetailsMenu} updateMenuByID={this.showUpdateModal} deleteMenuByID={this.deleteMenuByID} />
+                        <MenuList isLoading={this.state.isLoading} detailsMenu={this.showDetailsMenu} updateMenuByID={this.showUpdateModal} deleteMenuByID={this.deleteMenuByID} />
                         <DetailMenu show={this.state.showDetails} onHide={this.hideDetailsMenu} result={this.state.selectedMenu} />
                         {updateModal}
                     </div>
@@ -134,4 +134,10 @@ class Menu extends Component {
     }
 }
 
-export default Menu
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onGetMenus: (messages, result) => dispatch({ type: "GET_MENUS", messages: messages, result: result }),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Menu)

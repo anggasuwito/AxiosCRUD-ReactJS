@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table } from "react-bootstrap/cjs";
 import LoadingScreen from '../../components/LoadingScreen.js';
-import accounting from 'accounting/accounting.js'
+import accounting from 'accounting'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Button } from 'react-bootstrap'
+import { connect } from 'react-redux'
 
 const MenuList = (props) => {
     const { isLoading, result, detailsMenu, updateMenuByID, deleteMenuByID } = props
@@ -35,13 +36,13 @@ const MenuList = (props) => {
                             <td>{accounting.formatMoney(menu.harga_menu, "Rp. ", 2, ".", ",")}</td>
                             <td>{menu.stok_menu}</td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => detailsMenu(menu)} icon={faEye} /></Button>
+                                <Button variant="secondary" onClick={() => detailsMenu(menu)}> <FontAwesomeIcon icon={faEye} /></Button>
                             </td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => updateMenuByID(menu)} icon={faEdit} /></Button>
+                                <Button variant="success" onClick={() => updateMenuByID(menu)}> <FontAwesomeIcon icon={faEdit} /></Button>
                             </td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => deleteMenuByID(menu)} icon={faTrash} /></Button>
+                                <Button variant="danger" onClick={() => deleteMenuByID(menu.id_menu)}> <FontAwesomeIcon icon={faTrash} /></Button>
                             </td>
                         </tr>
                     )}
@@ -51,4 +52,8 @@ const MenuList = (props) => {
     )
 }
 
-export default MenuList;
+const mapStateToProps = (state) => {
+    return { result: state.result }
+}
+
+export default connect(mapStateToProps)(MenuList);
