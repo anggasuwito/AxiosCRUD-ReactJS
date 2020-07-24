@@ -41,7 +41,7 @@ const MenuList = (props) => {
                                 <Button> <FontAwesomeIcon onClick={() => updateMenuByID(menu)} icon={faEdit} /></Button>
                             </td>
                             <td>
-                                <Button> <FontAwesomeIcon onClick={() => deleteMenuByID(menu)} icon={faTrash} /></Button>
+                                <Button> <FontAwesomeIcon onClick={() => deleteMenuByID(menu.id_menu)} icon={faTrash} /></Button>
                             </td>
                         </tr>
                     )}
