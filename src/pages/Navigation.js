@@ -16,10 +16,21 @@ class Navigation extends Component {
     state = {
         auth: false
     }
+    componentDidMount() {
+        if (sessionStorage.getItem("auth") !== null) {
+            this.setState({
+                auth: true,
+            });
+            this.props.history.push({
+                pathname: this.props.location.pathname,
+            });
+        }
+    }
     onLogin = () => {
         this.setState({
             auth: true
         })
+        sessionStorage.setItem("auth", "loggedIn");
         this.props.history.push({
             pathname: "/home"
         })
@@ -28,6 +39,7 @@ class Navigation extends Component {
         this.setState({
             auth: false
         })
+        sessionStorage.removeItem("auth")
         this.props.history.push({
             pathname: "/"
         })
@@ -54,7 +66,7 @@ class Navigation extends Component {
                         }} />
                     {routeList}
                     <Route path="*">
-                        <NotFound/>
+                        <NotFound />
                     </Route>
                 </Switch>
             </div>
