@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react'
 import { getAllMenus, createMenu, updateMenu, deleteMenu } from "../../api/menu/MenuServices.js";
 import MenuList from "./MenuList.js";
 import CreateMenu from './CreateMenu.js';
@@ -6,98 +6,76 @@ import UpdateMenu from './UpdateMenu'
 import DetailMenu from './DetailsMenu.js';
 import swal from 'sweetalert'
 
-class Menu extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            message: "",
-            result: [],
-            selectedMenu: {},
-            showDetails: false,
-            showCreateMenu: false,
-            showUpdate: false,
-            isLoading: true,
-        }
-    }
 
-    componentDidMount() {
-        this.loadData()
-    }
+const Menu = () => {
+    const [result, setResult] = useState([])
+    const [selectedMenu, setSelectedMenu] = useState({})
+    const [showDetails, setShowDetails] = useState(false)
+    const [showCreateMenu, setShowCreateMenu] = useState(false)
+    const [showUpdate, setShowUpdate] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
-    loadData = () => {
+    useEffect(() => {
+        loadData()
+    })
+    const loadData = () => {
         getAllMenus().then((response) => {
             if (response.status === 200) {
-                this.setState({ ...this.state, message: response.data.messages, result: response.data.result, isLoading: false })
+                setResult(response.data.result)
+                setIsLoading(false)
             }
         })
     }
 
-    showDetailsMenu = (result) => {
-        this.setState({
-            ...this.state,
-            showDetails: !this.state.showDetails,
-            selectedMenu: { ...result }
-        })
+    const showDetailsMenu = (result) => {
+        setShowDetails(!showDetails)
+        setSelectedMenu({ ...result })
     }
 
-    hideDetailsMenu = () => {
-        this.setState({
-            ...this.state,
-            showDetails: !this.state.showDetails,
-            selectedMenu: {}
-        })
+    const hideDetailsMenu = () => {
+        setShowDetails(!showDetails)
+        setSelectedMenu({})
     }
 
-    handleCreateModal = () => {
-        this.setState({
-            ...this.state,
-            showCreateMenu: !this.state.showCreateMenu,
-        })
+    const handleCreateModal = () => {
+        setShowCreateMenu(!showCreateMenu)
     }
 
-    addNewMenu = (jenisMenu, namaMenu, hargaMenu, stokMenu) => {
+    const addNewMenu = (jenisMenu, namaMenu, hargaMenu, stokMenu) => {
         createMenu({
             jenis_menu: jenisMenu,
             nama_menu: namaMenu,
             harga_menu: hargaMenu,
             stok_menu: stokMenu
         }).then(() => {
-            this.setState({
-                ...this.state,
-                showCreateMenu: !this.state.showCreateMenu,
-            })
-            this.loadData()
+            setShowCreateMenu(!showCreateMenu)
+            loadData()
         })
     }
 
-    showUpdateModal = (result) => {
-        this.setState({
-            ...this.state,
-            showUpdate: !this.state.showUpdate,
-            selectedMenu: { ...result }
-        })
+    const showUpdateModal = (result) => {
+        setShowUpdate(!showUpdate)
+        setSelectedMenu({ ...result })
     }
 
-    hideUpdateModal = () => {
-        this.setState({
-            ...this.state,
-            showUpdate: !this.state.showUpdate,
-            selectedMenu: {}
-        })
+    const hideUpdateModal = () => {
+        setShowUpdate(!showUpdate)
+        setSelectedMenu({})
     }
 
-    updateMenuByID = (jenis, nama, harga, stok, id) => {
-         updateMenu({
+    const updateMenuByID = (jenis, nama, harga, stok, id) => {
+        updateMenu({
             jenis_menu: jenis,
             nama_menu: nama,
             harga_menu: harga,
             stok_menu: stok,
             id_menu: id
         }).then(() => {
-            this.loadData()
+            loadData()
         })
     }
-    deleteMenuByID = (id) => {
+
+    const deleteMenuByID = (id) => {
         swal({
             title: "Are you sure want to delete this data ?",
             icon: "warning",
@@ -108,30 +86,30 @@ class Menu extends Component {
                 if (willDelete) {
                     deleteMenu(id)
                         .then(() => {
-                            this.loadData()
+                            loadData()
                         })
                 }
             });
     }
-    render() {
-        let updateModal
-        if (this.state.showUpdate) {
-            updateModal = <UpdateMenu show={this.state.showUpdate} onHide={this.hideUpdateModal} result={this.state.selectedMenu} updateMenuByID={this.updateMenuByID} />
-        }
-        return (
-            <div>
-                <div className="container">
-                    <br />
-                    <CreateMenu show={this.state.showCreateMenu} handleCreateModal={this.handleCreateModal} addNewMenu={this.addNewMenu} />
-                    <div>
-                        <MenuList result={this.state.result} isLoading={this.state.isLoading} detailsMenu={this.showDetailsMenu} updateMenuByID={this.showUpdateModal} deleteMenuByID={this.deleteMenuByID} />
-                        <DetailMenu show={this.state.showDetails} onHide={this.hideDetailsMenu} result={this.state.selectedMenu} />
-                        {updateModal}
-                    </div>
+
+    let updateModal
+    if (showUpdate) {
+        updateModal = <UpdateMenu show={showUpdate} onHide={hideUpdateModal} result={selectedMenu} updateMenuByID={updateMenuByID} />
+    }
+    return (
+        <div>
+            <div className="container">
+                <br />
+                <CreateMenu show={showCreateMenu} handleCreateModal={handleCreateModal} addNewMenu={addNewMenu} />
+                <div>
+                    <MenuList result={result} isLoading={isLoading} detailsMenu={showDetailsMenu} updateMenuByID={showUpdateModal} deleteMenuByID={deleteMenuByID} />
+                    <DetailMenu show={showDetails} onHide={hideDetailsMenu} result={selectedMenu} />
+                    {updateModal}
                 </div>
             </div>
-        );
-    }
+        </div>
+    )
+   
 }
 
 export default Menu
