@@ -17,7 +17,7 @@ const Menu = () => {
 
     useEffect(() => {
         loadData()
-    })
+    },[])
     const loadData = () => {
         getAllMenus().then((response) => {
             if (response.status === 200) {
