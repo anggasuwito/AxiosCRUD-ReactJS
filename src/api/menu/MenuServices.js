@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const getAllMenus = async () => {
-    let menus = await axios.get("http://localhost:3000/allmenus")
+const getAllMenus = async (keywords, page, limit) => {
+    let menus = await axios.get(`http://localhost:3000/allmenus?keywords=${keywords}&page=${page * limit - limit}&limit=${limit}`)
     return menus
 }
 
@@ -15,7 +15,7 @@ const createMenu = async (form) => {
     return newMenu
 }
 const updateMenu = async (form) => {
-    console.log("FORM",form);
+    console.log("FORM", form);
     console.log("link = http://localhost:3000/menu/" + form.id_menu);
     let changeMenu = await axios.put("http://localhost:3000/menu/" + form.id_menu, form)
     return changeMenu
