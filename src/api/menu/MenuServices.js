@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const getAllMenus = async (keywords, page, limit) => {
-    let menus = await axios.get(`http://localhost:3000/allmenus?keywords=${keywords}&page=${page * limit - limit}&limit=${limit}`)
+    let menus = await axios.get(`http://localhost:3000/allmenus?keywords=${keywords}&page=${page}&limit=${limit}`)
     return menus
 }
 
